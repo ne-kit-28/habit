@@ -1,4 +1,4 @@
-package y_lab.domain;
+package y_lab.domain.entities;
 
 public enum Role {
     ADMINISTRATOR,
