@@ -1,6 +1,8 @@
 package y_lab.usecases;
 
 import y_lab.domain.entities.User;
+import y_lab.out.repositories.HabitRepositoryImpl;
+import y_lab.out.repositories.ProgressRepositoryImpl;
 import y_lab.out.repositories.UserRepositoryImpl;
 
 import java.util.NoSuchElementException;
@@ -8,16 +10,20 @@ import java.util.Optional;
 
 public class EditUserUseCase {
     private final UserRepositoryImpl userRepository;
+    private final HabitRepositoryImpl habitRepository;
+    private final ProgressRepositoryImpl progressRepository;
 
-    public EditUserUseCase(UserRepositoryImpl userRepository) {
+    public EditUserUseCase(UserRepositoryImpl userRepository, HabitRepositoryImpl habitRepository, ProgressRepositoryImpl progressRepository) {
         this.userRepository = userRepository;
+        this.habitRepository = habitRepository;
+        this.progressRepository = progressRepository;
     }
 
     public void editUser(Long id, String newName, String newEmail, String newPassword) {
         Optional<User> user = userRepository.findById(id);
 
         if(user.isEmpty()) {
-            System.out.println("User with this email does not exist!");
+            System.out.println("User with this id does not exist!");
             return;
         }
 
@@ -39,6 +45,9 @@ public class EditUserUseCase {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+        habitRepository.deleteAllByUserId(id);
+        progressRepository.deleteAllByUserId(id);
+        System.out.println("User and all habits were deleted!");
     }
 
     public void blockUser(Long id, boolean block) {

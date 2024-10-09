@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class User {
-    private long id;
+    private Long id;
     private String email;
     private String passwordHash;
     private String name;

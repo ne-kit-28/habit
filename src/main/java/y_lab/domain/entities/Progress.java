@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class Progress {
-    private long id;
+    private Long id;
     private User user;
     private Habit habit;
     private LocalDate date;

@@ -14,22 +14,23 @@ public class LoginUseCase {
         this.userRepository = userRepository;
     }
 
-    public void login(String email, String password) {
+    public Long login(String email, String password) {
 
         // Проверка существования пользователя
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
             System.out.println("User with this email does not exist!");
-            return;
+            return -1L;
         }
 
         // Проверка пароля
         if (!user.get().getPasswordHash().equals(hashPassword(password))) {
             System.out.println("Incorrect password!");
-            return;
+            return -1L;
         }
 
         // Успешная авторизация
         System.out.println("Login successful! Welcome, " + user.get().getName());
+        return user.get().getId();
     }
 }
