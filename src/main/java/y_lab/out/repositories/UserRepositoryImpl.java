@@ -4,9 +4,13 @@ import y_lab.domain.entities.User;
 import y_lab.domain.repositories.UserRepository;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 public class UserRepositoryImpl implements UserRepository {
-    HashMap<String, User> users = new HashMap<>();
+    HashMap<Long, User> users = new HashMap<>();
+    Long idGenerated = 0L;
 
     /**
      * @param email
@@ -14,7 +18,11 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public boolean isEmailExist(String email) {
-        return users.containsKey(email);
+        for (Map.Entry<Long, User> entry : users.entrySet()) {
+            if (Objects.equals(entry.getValue().getEmail(), email))
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -22,7 +30,9 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public void save(User user) {
-        users.put(user.getEmail(), user);
+        user.setId(idGenerated);
+        users.put(idGenerated, user);
+        ++idGenerated;
     }
 
     /**
@@ -30,28 +40,37 @@ public class UserRepositoryImpl implements UserRepository {
      * @return
      */
     @Override
-    public User findByEmail(String email) {
-        return users.get(email);
-    }
-
-    /**
-     * @param email
-     */
-    @Override
-    public void deleteByEmail(String email) {
-        users.remove(email);
-    }
-
-    /**
-     * @param oldEmail
-     */
-    @Override
-    public void update(String oldEmail, User user) {
-        if (oldEmail.equals(user.getEmail()))
-            users.replace(oldEmail, user);
-        else {
-            deleteByEmail(oldEmail);
-            save(user);
+    public Optional<User> findByEmail(String email) {
+        for (Map.Entry<Long, User> entry : users.entrySet()) {
+            if (Objects.equals(entry.getValue().getEmail(), email))
+                return Optional.of(entry.getValue());
         }
+        return Optional.empty();
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    @Override
+    public Optional<User> findById(Long id) {
+        return Optional.of(users.get(id));
+    }
+
+    /**
+     * @param id
+     */
+    @Override
+    public void deleteById(Long id) {
+        users.remove(id);
+    }
+
+    /**
+     * @param id
+     */
+    @Override
+    public void update(Long id, User user) {
+        if (users.containsKey(id))
+            users.replace(id, user);
     }
 }
