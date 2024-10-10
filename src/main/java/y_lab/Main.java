@@ -1,44 +1,37 @@
 package y_lab;
 
+import y_lab.in.Adapters.ConsoleUserInputAdapter;
 import y_lab.out.repositories.HabitRepositoryImpl;
 import y_lab.out.repositories.ProgressRepositoryImpl;
 import y_lab.out.repositories.UserRepositoryImpl;
-import y_lab.usecases.EditUserUseCase;
-import y_lab.usecases.LoginUseCase;
-import y_lab.usecases.PasswordResetUseCase;
-import y_lab.usecases.RegistrationUseCase;
+import y_lab.usecases.*;
 
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        //System.out.println("Hello world!");
-        UserRepositoryImpl rep = new UserRepositoryImpl();
-        HabitRepositoryImpl repH = new HabitRepositoryImpl();
-        ProgressRepositoryImpl repP = new ProgressRepositoryImpl();
 
-        LoginUseCase log = new LoginUseCase(rep);
-        RegistrationUseCase reg = new RegistrationUseCase(rep);
-        PasswordResetUseCase resPass = new PasswordResetUseCase(rep);
-        EditUserUseCase edUs = new EditUserUseCase(rep, repH, repP);
-        Long userId;
+        UserRepositoryImpl userRepository = new UserRepositoryImpl();
+        HabitRepositoryImpl habitRepository = new HabitRepositoryImpl();
+        ProgressRepositoryImpl progressRepository = new ProgressRepositoryImpl();
 
-        Scanner scanner = new Scanner(System.in);
-        String em = scanner.nextLine();
-        String pas = scanner.nextLine();
-        String name = scanner.nextLine();
+        CreateHabitUseCase createHabitUseCase = new CreateHabitUseCase(habitRepository, userRepository);
+        CreateProgressUseCase createProgressUseCase = new CreateProgressUseCase(habitRepository, userRepository, progressRepository);
+        DeleteHabitUseCase deleteHabitUseCase = new DeleteHabitUseCase(habitRepository,progressRepository);
+        EditUserUseCase editUserUseCase = new EditUserUseCase(userRepository,habitRepository, progressRepository);
+        GenerateProgressStatisticsUseCase generateProgressStatisticsUseCase = new GenerateProgressStatisticsUseCase(progressRepository, habitRepository, userRepository);
+        GetHabitsUseCase getHabitsUseCase = new GetHabitsUseCase(habitRepository);
+        LoginUseCase loginUseCase = new LoginUseCase(userRepository);
+        PasswordResetUseCase passwordResetUseCase = new PasswordResetUseCase(userRepository);
+        StreakCalculationUseCase streakCalculationUseCase = new StreakCalculationUseCase(progressRepository, habitRepository);
+        ProgressReportUseCase progressReportUseCase = new ProgressReportUseCase(generateProgressStatisticsUseCase, streakCalculationUseCase);
+        RegistrationUseCase registrationUseCase = new RegistrationUseCase(userRepository);
+        UpdateHabitUseCase updateHabitUseCase = new UpdateHabitUseCase(habitRepository);
 
-        reg.register(name, em, pas);
-        userId = log.login(em, pas);
-        resPass.requestPasswordReset(em);
+        ConsoleUserInputAdapter inputAdapter = new ConsoleUserInputAdapter(createHabitUseCase, createProgressUseCase
+                , deleteHabitUseCase, editUserUseCase,generateProgressStatisticsUseCase,getHabitsUseCase,loginUseCase
+                ,passwordResetUseCase,progressReportUseCase,registrationUseCase,streakCalculationUseCase
+                ,updateHabitUseCase);
 
-        String tok = scanner.nextLine();
-        String newP = scanner.nextLine();
-
-        resPass.resetPassword(em, tok, newP);
-
-        edUs.editUser(0L, "nam@a", "", "");
-        System.out.println(rep.findById(0L).get().getEmail());
-        System.out.println("My userId is: " + userId);
+        inputAdapter.start();
     }
 }
