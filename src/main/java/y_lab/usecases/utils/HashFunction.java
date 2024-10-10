@@ -1,4 +1,4 @@
-package y_lab.usecases;
+package y_lab.usecases.utils;
 
 public class HashFunction {
     public static String hashPassword(String password) {

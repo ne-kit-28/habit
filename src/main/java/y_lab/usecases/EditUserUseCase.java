@@ -4,6 +4,7 @@ import y_lab.domain.entities.User;
 import y_lab.out.repositories.HabitRepositoryImpl;
 import y_lab.out.repositories.ProgressRepositoryImpl;
 import y_lab.out.repositories.UserRepositoryImpl;
+import y_lab.usecases.utils.HashFunction;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;

@@ -5,7 +5,7 @@ import y_lab.domain.repositories.UserRepository;
 
 import java.util.Optional;
 
-import static y_lab.usecases.HashFunction.hashPassword;
+import static y_lab.usecases.utils.HashFunction.hashPassword;
 
 public class LoginUseCase {
     private final UserRepository userRepository;

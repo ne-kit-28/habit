@@ -6,7 +6,7 @@ import y_lab.out.repositories.UserRepositoryImpl;
 import java.util.Optional;
 import java.util.UUID;
 
-import static y_lab.usecases.HashFunction.hashPassword;
+import static y_lab.usecases.utils.HashFunction.hashPassword;
 
 public class PasswordResetUseCase {
     private final UserRepositoryImpl userRepository;

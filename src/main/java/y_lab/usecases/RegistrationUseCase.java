@@ -4,7 +4,7 @@ import y_lab.domain.entities.Role;
 import y_lab.domain.entities.User;
 import y_lab.domain.repositories.UserRepository;
 
-import static y_lab.usecases.HashFunction.hashPassword;
+import static y_lab.usecases.utils.HashFunction.hashPassword;
 
 public class RegistrationUseCase {
     private final UserRepository userRepository;
