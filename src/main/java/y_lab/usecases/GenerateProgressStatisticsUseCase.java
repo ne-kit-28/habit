@@ -30,19 +30,27 @@ public class GenerateProgressStatisticsUseCase {
         // Определение периода для генерации статистики
         LocalDate startDate = calculateStartDate(period);
         LocalDate endDate = LocalDate.now();
+        long totalDays = (ChronoUnit.DAYS.between(startDate, endDate) + 1) / (frequency == Frequency.WEEKLY ? 7 : 1);
 
         // Получение прогресса за указанный период
-        Optional<ArrayList<Progress>> progressList = progressRepository.findByHabitId(habitId);
-        ArrayList<Progress> filteredProgresses = new ArrayList<>(progressList.orElseThrow(NoSuchElementException::new)
+        ArrayList<Progress> progressList = progressRepository.findByHabitId(habitId);
+        if (progressList.isEmpty()) {
+            System.out.println("Habit: " + habit.getName());
+            System.out.println("Period: " + period);
+            System.out.println("Completed: 0 out of " + totalDays + " days.");
+            System.out.println("Completion rate: 0%");
+            return;
+        }
+
+        ArrayList<Progress> filteredProgresses = new ArrayList<>(progressList
                 .stream()
                 .filter(progress -> progress.getDate().isAfter(startDate))
                 .toList());
 
         // Генерация статистики
-        long totalDays = (ChronoUnit.DAYS.between(startDate, endDate) + 1) / (frequency == Frequency.WEEKLY ? 7 : 1);
         long completedDays = filteredProgresses.size();
 
-        System.out.println("Habit: " + habitId);
+        System.out.println("Habit: " + habit.getName());
         System.out.println("Period: " + period);
         System.out.println("Completed: " + completedDays + " out of " + totalDays + " days.");
         System.out.println("Completion rate: " + (completedDays * 100 / totalDays) + "%");

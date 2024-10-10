@@ -10,5 +10,5 @@ public interface ProgressRepository {
     void deleteAllByHabitId(Long habitId);
     void deleteAllByUserId(Long userId);
     Optional<Progress> findById(Long progressId);
-    Optional<ArrayList<Progress>> findByHabitId(Long habitId);
+    ArrayList<Progress> findByHabitId(Long habitId);
 }

@@ -59,12 +59,12 @@ public class ProgressRepositoryImpl implements ProgressRepository {
      * @return
      */
     @Override
-    public Optional<ArrayList<Progress>> findByHabitId(Long habitId) {
+    public ArrayList<Progress> findByHabitId(Long habitId) {
         ArrayList<Progress> arrayList = new ArrayList<>();
         for(Map.Entry<Long, Progress> entry : progresses.entrySet()) {
             if (entry.getValue().getHabit().getId().equals(habitId))
                 arrayList.add(entry.getValue());
         }
-        return Optional.of(arrayList);
+        return arrayList;
     }
 }
