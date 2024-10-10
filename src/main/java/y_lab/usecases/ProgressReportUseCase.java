@@ -10,7 +10,7 @@ public class ProgressReportUseCase {
         this.streakCalculationUseCase = streakCalculationUseCase;
     }
 
-    public void generateReport(String username, Long habitId, String period) { //String {"day", "week", "month"}
+    public void generateReport(Long habitId, String period) { //String {"day", "week", "month"}
         // Генерация статистики
         generateStatisticsUseCase.generateProgressStatistics(habitId, period);
 

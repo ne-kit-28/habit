@@ -4,6 +4,7 @@ import y_lab.domain.entities.User;
 import y_lab.out.repositories.UserRepositoryImpl;
 
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.UUID;
 
 import static y_lab.usecases.utils.HashFunction.hashPassword;
@@ -17,6 +18,7 @@ public class PasswordResetUseCase {
 
     // Запрос на сброс пароля
     public void requestPasswordReset(String email) {
+        Scanner scanner = new Scanner(System.in);
 
         // Поиск пользователя по email
         Optional<User> user = userRepository.findByEmail(email);
@@ -33,6 +35,13 @@ public class PasswordResetUseCase {
         sendResetEmail(user.get().getEmail(), token, "reset token: ");
 
         System.out.println("Password reset token sent to your email.");
+
+        System.out.println("Enter your token:");
+        String readToken = scanner.nextLine();
+        System.out.println("Enter your new password:");
+        String password = scanner.nextLine();
+
+        resetPassword(email, readToken, password);
     }
 
     public void resetPassword(String email, String token, String newPassword) {
