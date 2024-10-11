@@ -19,9 +19,8 @@ public class GetHabitsUseCase {
 
     public ArrayList<Habit> getHabits(Long userId, Object filter) {
         ArrayList<Habit> habits = habitRepository.findHabitsByUserId(userId).orElseThrow(NoSuchElementException::new);
-        if (filter instanceof LocalDate instanceFilter) {
+        if (filter instanceof String) {
             habits = new ArrayList<>(habits.stream()
-                    .filter(habit -> habit.getCreatedAt().isAfter(instanceFilter))
                     .sorted(Comparator.comparing(Habit::getCreatedAt))
                     .toList());
         }

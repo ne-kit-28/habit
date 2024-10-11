@@ -18,7 +18,7 @@ public class Main {
         CreateProgressUseCase createProgressUseCase = new CreateProgressUseCase(habitRepository, userRepository, progressRepository);
         DeleteHabitUseCase deleteHabitUseCase = new DeleteHabitUseCase(habitRepository,progressRepository);
         EditUserUseCase editUserUseCase = new EditUserUseCase(userRepository,habitRepository, progressRepository);
-        GenerateProgressStatisticsUseCase generateProgressStatisticsUseCase = new GenerateProgressStatisticsUseCase(progressRepository, habitRepository, userRepository);
+        GenerateProgressStatisticsUseCase generateProgressStatisticsUseCase = new GenerateProgressStatisticsUseCase(progressRepository, habitRepository);
         GetHabitsUseCase getHabitsUseCase = new GetHabitsUseCase(habitRepository);
         LoginUseCase loginUseCase = new LoginUseCase(userRepository);
         PasswordResetUseCase passwordResetUseCase = new PasswordResetUseCase(userRepository);
@@ -27,10 +27,20 @@ public class Main {
         RegistrationUseCase registrationUseCase = new RegistrationUseCase(userRepository);
         UpdateHabitUseCase updateHabitUseCase = new UpdateHabitUseCase(habitRepository);
 
-        ConsoleUserInputAdapter inputAdapter = new ConsoleUserInputAdapter(createHabitUseCase, createProgressUseCase
-                , deleteHabitUseCase, editUserUseCase,generateProgressStatisticsUseCase,getHabitsUseCase,loginUseCase
-                ,passwordResetUseCase,progressReportUseCase,registrationUseCase,streakCalculationUseCase
-                ,updateHabitUseCase);
+        ConsoleUserInputAdapter inputAdapter = new ConsoleUserInputAdapter(
+                createHabitUseCase
+                , createProgressUseCase
+                , deleteHabitUseCase
+                , editUserUseCase
+                , generateProgressStatisticsUseCase
+                , getHabitsUseCase
+                , loginUseCase
+                , passwordResetUseCase
+                , progressReportUseCase
+                , registrationUseCase
+                , streakCalculationUseCase
+                , updateHabitUseCase
+        );
 
         inputAdapter.start(); //TODO регулярки для email, сохранение в файл и востановление, роль админа
     }

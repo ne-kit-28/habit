@@ -16,12 +16,10 @@ import java.util.Optional;
 public class GenerateProgressStatisticsUseCase {
     private final ProgressRepositoryImpl progressRepository;
     private final HabitRepositoryImpl habitRepository;
-    private final UserRepositoryImpl userRepository;
 
-    public GenerateProgressStatisticsUseCase(ProgressRepositoryImpl progressRepository, HabitRepositoryImpl habitRepository, UserRepositoryImpl userRepository) {
+    public GenerateProgressStatisticsUseCase(ProgressRepositoryImpl progressRepository, HabitRepositoryImpl habitRepository) {
         this.progressRepository = progressRepository;
         this.habitRepository = habitRepository;
-        this.userRepository = userRepository;
     }
 
     public void generateProgressStatistics(Long habitId, String period) {

@@ -1,7 +1,6 @@
 package y_lab.domain.repositories;
 
 import y_lab.domain.entities.Habit;
-import y_lab.domain.entities.User;
 
 import java.util.ArrayList;
 import java.util.Optional;
