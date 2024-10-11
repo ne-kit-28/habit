@@ -23,7 +23,7 @@ public class UpdateHabitUseCase {
         }
 
         // Проверка уникальности нового name
-        if (newName != null && !newName.isEmpty() && habitRepository.findByName(newName).isPresent()) {
+        if (newName != null && !newName.isEmpty() && habitRepository.findByName(newName, habit.get().getUser().getId()).isPresent()) {
             System.out.println("Name already in use by another account!");
             return;
         }

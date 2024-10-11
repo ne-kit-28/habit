@@ -32,6 +32,6 @@ public class Main {
                 ,passwordResetUseCase,progressReportUseCase,registrationUseCase,streakCalculationUseCase
                 ,updateHabitUseCase);
 
-        inputAdapter.start();
+        inputAdapter.start(); //TODO регулярки для email, сохранение в файл и востановление, роль админа
     }
 }

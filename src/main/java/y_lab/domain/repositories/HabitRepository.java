@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface HabitRepository {
     Optional<Habit> findById(Long id);
-    Optional<Habit> findByName(String name);
+    Optional<Habit> findByName(String name, Long userId);
     void save(Habit habit);
     void delete(Long id);
     void deleteAllByUserId(Long userId);

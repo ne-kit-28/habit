@@ -18,6 +18,11 @@ public class CreateHabitUseCase {
     }
 
     public void createHabit(Long userId, String name, String description, Frequency frequency) {
+        if (habitRepository.findByName(name, userId).isPresent()) {
+            System.out.println("Habit with such name exist");
+            System.out.println("Habit is not created");
+            return;
+        }
         Habit habit = new Habit(name, description, frequency, LocalDate.now());
         User user = userRepository.findById(userId).orElseThrow();
         habit.setUser(user);

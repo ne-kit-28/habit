@@ -26,9 +26,9 @@ public class HabitRepositoryImpl implements HabitRepository {
      * @return
      */
     @Override
-    public Optional<Habit> findByName(String name) {
+    public Optional<Habit> findByName(String name, Long userId) {
         for (Map.Entry<Long, Habit> entry : habits.entrySet()) {
-            if (entry.getValue().getName().equals(name))
+            if (entry.getValue().getName().equals(name) && entry.getValue().getUser().getId().equals(userId))
                 return Optional.of(entry.getValue());
         }
         return Optional.empty();
@@ -57,9 +57,18 @@ public class HabitRepositoryImpl implements HabitRepository {
      */
     @Override
     public void deleteAllByUserId(Long userId) {
+        // Создаем список для хранения ключей, которые нужно удалить
+        ArrayList<Long> keysToDelete = new ArrayList<>();
+
+        // Сначала собираем ключи для удаления
         for (Map.Entry<Long, Habit> entry : habits.entrySet()) {
-            if (entry.getValue().getUser().getId().equals(userId))
-                this.delete(entry.getKey());
+            if (entry.getValue().getUser().getId().equals(userId)) {
+                keysToDelete.add(entry.getKey());
+            }
+        }
+
+        for (Long key : keysToDelete) {
+            this.delete(key);
         }
     }
 

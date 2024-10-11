@@ -1,8 +1,11 @@
 package y_lab.in.Adapters;
 
 import y_lab.domain.entities.Frequency;
+import y_lab.domain.entities.Habit;
 import y_lab.usecases.*;
 
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class ConsoleUserInputAdapter {
@@ -43,6 +46,7 @@ public class ConsoleUserInputAdapter {
         Scanner scanner = new Scanner(System.in);
         String option;
         String name;
+        String habitName;
         String email;
         String password;
         String description;
@@ -50,6 +54,7 @@ public class ConsoleUserInputAdapter {
         Long userId;
         Long habitId;
         String buffer;
+        ArrayList<Habit> habits;
 
         // Основное меню
         while (true) {
@@ -106,7 +111,24 @@ public class ConsoleUserInputAdapter {
                                                 createHabitUseCase.createHabit(userId, name, description, frequency);
                                                 break;
                                             case "2":
-                                                System.out.println("soon...");
+                                                while (true) {
+                                                    System.out.println("Enter your habit's name if you know (or press Enter to skip):");
+                                                    habitName = scanner.nextLine();
+                                                    if (!habitName.isEmpty()) {
+                                                        habitId = getHabitsUseCase.getHabit(habitName, userId);
+                                                        if (habitId == -1L) {
+                                                            System.out.println("No such habit!");
+                                                        }
+                                                        break;
+                                                    } else {
+                                                        System.out.println("Enter type of sorting");
+                                                        System.out.println("1. date of creating \n2. Daily first \n3. Weekly first");
+                                                        option = scanner.nextLine();
+                                                        habits = getHabitsUseCase.getHabits(userId, Frequency.DAILY); //TODO validation
+                                                        if (habits.isEmpty())
+                                                            break;
+                                                    }
+                                                }
                                                 break;
                                             case "3":
                                                 System.out.println("log out succeed");
