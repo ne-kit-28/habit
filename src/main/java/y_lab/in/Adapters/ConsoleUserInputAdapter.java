@@ -111,25 +111,64 @@ public class ConsoleUserInputAdapter {
                                                 createHabitUseCase.createHabit(userId, name, description, frequency);
                                                 break;
                                             case "2":
-                                                while (true) {
-                                                    System.out.println("Enter your habit's name if you know (or press Enter to skip):");
+                                                System.out.println("Enter your habit's name if you know (or press Enter to skip):");
+                                                habitName = scanner.nextLine();
+                                                if (!habitName.isEmpty()) {
+                                                    habitId = getHabitsUseCase.getHabit(habitName, userId);
+                                                    if (habitId == -1L) {
+                                                        System.out.println("No such habit!");
+                                                        break;
+                                                    }
+                                                } else {
+                                                    System.out.println("Enter type of sorting");
+                                                    System.out.println("1. date of creating \n2. Daily first \n3. Weekly first");
+                                                    option = scanner.nextLine();
+                                                    habits = getHabitsUseCase.getHabits(userId, Frequency.DAILY); //TODO validation
+                                                    if (habits.isEmpty())
+                                                        break;
+                                                    System.out.println("Enter your habit's name if you know (or press Enter to return back):");
                                                     habitName = scanner.nextLine();
                                                     if (!habitName.isEmpty()) {
                                                         habitId = getHabitsUseCase.getHabit(habitName, userId);
                                                         if (habitId == -1L) {
                                                             System.out.println("No such habit!");
-                                                        }
-                                                        break;
-                                                    } else {
-                                                        System.out.println("Enter type of sorting");
-                                                        System.out.println("1. date of creating \n2. Daily first \n3. Weekly first");
-                                                        option = scanner.nextLine();
-                                                        habits = getHabitsUseCase.getHabits(userId, Frequency.DAILY); //TODO validation
-                                                        if (habits.isEmpty())
                                                             break;
+                                                        }
+                                                    } else
+                                                        break;
+                                                }
+                                                while (true) {
+                                                    System.out.println("Select option:");
+                                                    System.out.println("1. Mark the completion");
+                                                    System.out.println("2. Edit habit");
+                                                    System.out.println("3. Delete habit");
+                                                    System.out.println("4. previous menu");
+                                                    option = scanner.nextLine();
+
+                                                    switch (option) {
+                                                        case "1":
+                                                            createProgressUseCase.createProgress(userId, habitId);
+                                                            break;
+                                                        case "2":
+                                                            System.out.println("Enter new name (or press Enter to skip): ");
+                                                            name = scanner.nextLine();
+
+                                                            System.out.println("Enter new description (or press Enter to skip): ");
+                                                            description = scanner.nextLine();
+
+                                                            System.out.println("Enter new frequency (or press Enter to skip): "); //TODO validate
+                                                            frequency = scanner.nextLine().equalsIgnoreCase("daily") ? Frequency.DAILY: Frequency.WEEKLY;
+                                                            updateHabitUseCase.updateHabit(habitId, name, description, frequency);
+                                                            break;
+                                                        case "3":
+                                                            deleteHabitUseCase.deleteHabit(habitId);
+                                                            break HABIT;
+                                                        case "4":
+                                                            break HABIT;
+                                                        default:
+                                                            System.out.println("Invalid option. Please try again.");
                                                     }
                                                 }
-                                                break;
                                             case "3":
                                                 System.out.println("log out succeed");
                                                 habitId = -1L;

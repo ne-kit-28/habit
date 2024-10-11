@@ -23,7 +23,7 @@ public class CreateProgressUseCase {
         this.progressRepository = progressRepository;
     }
 
-    void createProgress(Long userId, Long habitId) {
+    public void createProgress(Long userId, Long habitId) {
         User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
         Habit habit = habitRepository.findById(habitId).orElseThrow(NoSuchElementException::new);
         Progress progress = Progress.builder()
