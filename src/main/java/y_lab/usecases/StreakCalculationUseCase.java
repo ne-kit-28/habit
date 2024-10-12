@@ -12,16 +12,33 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 
+/**
+ * Use case for calculating the streak of a habit.
+ * This class is responsible for determining the current and maximum streak
+ * of a specified habit based on the recorded progress.
+ */
 public class StreakCalculationUseCase {
     private final ProgressRepositoryImpl progressRepository;
     private final HabitRepositoryImpl habitRepository;
 
-    public StreakCalculationUseCase(ProgressRepositoryImpl progressRepository
-            , HabitRepositoryImpl habitRepository) {
+    /**
+     * Constructs a new {@code StreakCalculationUseCase} instance with the specified progress and habit repositories.
+     *
+     * @param progressRepository the repository used for managing progress data
+     * @param habitRepository    the repository used for managing habit data
+     */
+    public StreakCalculationUseCase(ProgressRepositoryImpl progressRepository, HabitRepositoryImpl habitRepository) {
         this.progressRepository = progressRepository;
         this.habitRepository = habitRepository;
     }
 
+    /**
+     * Calculates the current and maximum streak for a specified habit.
+     * The streak is determined based on the frequency of the habit and the recorded progress.
+     * It prints the current and maximum streak in days.
+     *
+     * @param habitId the ID of the habit for which to calculate the streak
+     */
     public void calculateStreak(Long habitId) {
         Habit habit = habitRepository.findById(habitId).orElseThrow(NoSuchElementException::new);
 
@@ -36,20 +53,21 @@ public class StreakCalculationUseCase {
                 .sorted(Comparator.comparing(Progress::getDate))
                 .toList());
 
-        // Подсчет текущего streak'а
+        // Calculate current streak
         int streak = 1;
         int maxStreak = 1;
         for (int i = 1; i < progressList.size(); ++i) {
             if (Period.between(progressList.get(i).getDate(), progressList.get(i - 1).getDate()).getDays()
-                    <= (habit.getFrequency().equals(Frequency.WEEKLY) ? 7 : 1) ) {
+                    <= (habit.getFrequency().equals(Frequency.WEEKLY) ? 7 : 1)) {
                 ++streak;
             } else if (streak > maxStreak) {
                 maxStreak = streak;
                 streak = 1;
             }
         }
-        if (streak > maxStreak)
+        if (streak > maxStreak) {
             maxStreak = streak;
+        }
 
         System.out.println("Current streak: " + streak + " days.");
         System.out.println("Max streak: " + maxStreak + " days.");

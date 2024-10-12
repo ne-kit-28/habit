@@ -2,9 +2,7 @@ package y_lab.out.repositories;
 
 import lombok.Getter;
 import lombok.Setter;
-import y_lab.domain.entities.Habit;
 import y_lab.domain.entities.Progress;
-import y_lab.domain.entities.User;
 import y_lab.domain.repositories.ProgressRepository;
 import y_lab.service.DataService;
 
@@ -13,18 +11,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+/**
+ * Implementation of the {@link ProgressRepository} interface, handling
+ * the persistence and retrieval of {@link Progress} objects using an
+ * in-memory {@link HashMap}. It also provides functionality to save and
+ * load progress data from a file.
+ */
 @Getter
 @Setter
 public class ProgressRepositoryImpl implements ProgressRepository, DataService {
-    HashMap<Long, Progress> progresses = new HashMap<>();
-    Long idGenerated = 0L;
+    private HashMap<Long, Progress> progresses = new HashMap<>();
+    private Long idGenerated = 0L;
 
+    /**
+     * Constructs a new {@code ProgressRepositoryImpl} and loads progress
+     * data from a file.
+     *
+     * @param fileName the file from which progress data will be loaded
+     */
     public ProgressRepositoryImpl(String fileName) {
         this.loadFromFile(fileName);
     }
 
     /**
-     * @param progress
+     * Saves the specified progress object in the repository.
+     * Automatically assigns an ID to the progress.
+     *
+     * @param progress the progress object to save
      */
     @Override
     public void save(Progress progress) {
@@ -34,30 +48,38 @@ public class ProgressRepositoryImpl implements ProgressRepository, DataService {
     }
 
     /**
-     * @param habitId
+     * Deletes all progress records associated with a given habit ID.
+     *
+     * @param habitId the ID of the habit for which to delete progress records
      */
     @Override
     public void deleteAllByHabitId(Long habitId) {
-        for(Map.Entry<Long, Progress> entry : progresses.entrySet()) {
-            if (entry.getValue().getHabit().getId().equals(habitId))
+        for (Map.Entry<Long, Progress> entry : progresses.entrySet()) {
+            if (entry.getValue().getHabit().getId().equals(habitId)) {
                 progresses.remove(entry.getKey());
+            }
         }
     }
 
     /**
-     * @param userId
+     * Deletes all progress records associated with a given user ID.
+     *
+     * @param userId the ID of the user for which to delete progress records
      */
     @Override
     public void deleteAllByUserId(Long userId) {
-        for(Map.Entry<Long, Progress> entry : progresses.entrySet()) {
-            if (entry.getValue().getUser().getId().equals(userId))
+        for (Map.Entry<Long, Progress> entry : progresses.entrySet()) {
+            if (entry.getValue().getUser().getId().equals(userId)) {
                 progresses.remove(entry.getKey());
+            }
         }
     }
 
     /**
-     * @param progressId
-     * @return
+     * Finds a progress record by its ID.
+     *
+     * @param progressId the ID of the progress record to find
+     * @return an {@code Optional} containing the found progress, or empty if not found
      */
     @Override
     public Optional<Progress> findById(Long progressId) {
@@ -65,19 +87,28 @@ public class ProgressRepositoryImpl implements ProgressRepository, DataService {
     }
 
     /**
-     * @param habitId
-     * @return
+     * Finds all progress records associated with a given habit ID.
+     *
+     * @param habitId the ID of the habit for which to find progress records
+     * @return an {@code ArrayList} containing all matching progress records
      */
     @Override
     public ArrayList<Progress> findByHabitId(Long habitId) {
         ArrayList<Progress> arrayList = new ArrayList<>();
-        for(Map.Entry<Long, Progress> entry : progresses.entrySet()) {
-            if (entry.getValue().getHabit().getId().equals(habitId))
+        for (Map.Entry<Long, Progress> entry : progresses.entrySet()) {
+            if (entry.getValue().getHabit().getId().equals(habitId)) {
                 arrayList.add(entry.getValue());
+            }
         }
         return arrayList;
     }
 
+    /**
+     * Saves the current state of the progress repository to a file.
+     * This includes all progress records and the ID generation counter.
+     *
+     * @param fileName the file to which data will be saved
+     */
     @Override
     public void saveToFile(String fileName) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
@@ -88,7 +119,12 @@ public class ProgressRepositoryImpl implements ProgressRepository, DataService {
         }
     }
 
-
+    /**
+     * Loads the state of the progress repository from a file.
+     * This includes all progress records and the ID generation counter.
+     *
+     * @param fileName the file from which data will be loaded
+     */
     @Override
     public void loadFromFile(String fileName) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {

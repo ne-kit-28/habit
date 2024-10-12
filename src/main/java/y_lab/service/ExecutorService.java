@@ -10,19 +10,31 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Service for scheduling notifications for habits.
+ * This class manages the scheduling of notifications based on the frequency of habits.
+ */
 public class ExecutorService {
     private final HabitRepositoryImpl habitRepository;
     private final NotificationService notificationService;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    /**
+     * Constructs an ExecutorService with the specified habit repository and notification service.
+     *
+     * @param habitRepository the repository for managing habits
+     * @param notificationService the service for sending notifications
+     */
     public ExecutorService(HabitRepositoryImpl habitRepository, NotificationService notificationService) {
         this.habitRepository = habitRepository;
         this.notificationService = notificationService;
     }
 
-
+    /**
+     * Starts the scheduler to send notifications for habits based on their frequency.
+     * Notifications are sent daily based on the habit's frequency.
+     */
     public void startScheduler() {
-
         scheduler.scheduleAtFixedRate(() -> {
             Frequency frequency;
             for (Habit habit : habitRepository.getAll()) {
@@ -31,19 +43,23 @@ public class ExecutorService {
                     notificationService.sendNotification(habit.getUser().getEmail(), habit.getName());
                 }
             }
-        }, 0, 1, TimeUnit.DAYS); // Проверка напоминаний каждый день
+        }, 0, 1, TimeUnit.DAYS); // Check reminders every day
     }
 
+    /**
+     * Stops the scheduler, preventing new tasks from being scheduled.
+     * Waits for currently running tasks to complete or forces shutdown if they exceed a timeout.
+     */
     public void stopScheduler() {
-        scheduler.shutdown(); // Останавливает приём новых задач
+        scheduler.shutdown(); // Stops accepting new tasks
         try {
-            // Ожидание завершения уже запущенных задач (например, 30 секунд)
+            // Wait for currently running tasks to finish (up to 10 seconds)
             if (!scheduler.awaitTermination(10, TimeUnit.SECONDS)) {
-                scheduler.shutdownNow(); // Принудительное завершение, если задачи не завершились вовремя
+                scheduler.shutdownNow(); // Force shutdown if tasks didn't finish in time
             }
         } catch (InterruptedException e) {
-            scheduler.shutdownNow(); // Прерывание ожидания завершения — выполняем немедленное завершение
-            Thread.currentThread().interrupt(); // Восстанавливаем флаг прерывания
+            scheduler.shutdownNow(); // Immediate shutdown on interruption
+            Thread.currentThread().interrupt(); // Restore interruption flag
         }
     }
 }
