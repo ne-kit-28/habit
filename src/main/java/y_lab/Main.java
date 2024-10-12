@@ -4,15 +4,20 @@ import y_lab.in.Adapters.ConsoleUserInputAdapter;
 import y_lab.out.repositories.HabitRepositoryImpl;
 import y_lab.out.repositories.ProgressRepositoryImpl;
 import y_lab.out.repositories.UserRepositoryImpl;
+import y_lab.service.ExecutorService;
+import y_lab.service.NotificationService;
 import y_lab.usecases.*;
 
 
 public class Main {
     public static void main(String[] args) {
 
+
         UserRepositoryImpl userRepository = new UserRepositoryImpl();
         HabitRepositoryImpl habitRepository = new HabitRepositoryImpl();
         ProgressRepositoryImpl progressRepository = new ProgressRepositoryImpl();
+
+        ExecutorService executorService = new ExecutorService(habitRepository, new NotificationService());
 
         CreateHabitUseCase createHabitUseCase = new CreateHabitUseCase(habitRepository, userRepository);
         CreateProgressUseCase createProgressUseCase = new CreateProgressUseCase(habitRepository, userRepository, progressRepository);
@@ -26,6 +31,7 @@ public class Main {
         ProgressReportUseCase progressReportUseCase = new ProgressReportUseCase(generateProgressStatisticsUseCase, streakCalculationUseCase);
         RegistrationUseCase registrationUseCase = new RegistrationUseCase(userRepository);
         UpdateHabitUseCase updateHabitUseCase = new UpdateHabitUseCase(habitRepository);
+        GetUsersUseCase getUsersUseCase = new GetUsersUseCase(userRepository);
 
         ConsoleUserInputAdapter inputAdapter = new ConsoleUserInputAdapter(
                 createHabitUseCase
@@ -40,8 +46,12 @@ public class Main {
                 , registrationUseCase
                 , streakCalculationUseCase
                 , updateHabitUseCase
+                , getUsersUseCase
         );
 
-        inputAdapter.start(); //TODO регулярки для email, сохранение в файл и востановление, роль админа
+        executorService.startScheduler();
+        inputAdapter.start(); //TODO сохранение в файл и востановление
+        executorService.stopScheduler();
+
     }
 }

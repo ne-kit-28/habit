@@ -12,4 +12,5 @@ public interface HabitRepository {
     void delete(Long id);
     void deleteAllByUserId(Long userId);
     Optional<ArrayList<Habit>> findHabitsByUserId(Long userId);
+    ArrayList<Habit> getAll();
 }

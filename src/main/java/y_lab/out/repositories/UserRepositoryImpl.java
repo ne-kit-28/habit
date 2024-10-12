@@ -3,13 +3,12 @@ package y_lab.out.repositories;
 import y_lab.domain.entities.User;
 import y_lab.domain.repositories.UserRepository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class UserRepositoryImpl implements UserRepository {
     HashMap<Long, User> users = new HashMap<>();
+    ArrayList<String> adminEmails = new ArrayList<>();
+
     Long idGenerated = 0L;
 
     /**
@@ -23,6 +22,16 @@ public class UserRepositoryImpl implements UserRepository {
                 return true;
         }
         return false;
+    }
+
+    /**
+     * @param email
+     * @return
+     */
+    @Override
+    public boolean isAdminEmail(String email) {
+        adminEmails.add("nik");
+        return adminEmails.contains(email);
     }
 
     /**
@@ -55,6 +64,14 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findById(Long id) {
         return Optional.of(users.get(id));
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ArrayList<User> getAll() {
+        return new ArrayList<>(users.values());
     }
 
     /**

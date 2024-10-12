@@ -14,23 +14,34 @@ public class LoginUseCase {
         this.userRepository = userRepository;
     }
 
-    public Long login(String email, String password) {
+    public User login(String email, String password) {
 
         // Проверка существования пользователя
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
             System.out.println("User with this email does not exist!");
-            return -1L;
+            User user_ = new User();
+            user_.setId(-1L);
+            return user_;
         }
 
         // Проверка пароля
         if (!user.get().getPasswordHash().equals(hashPassword(password))) {
             System.out.println("Incorrect password!");
-            return -1L;
+            User user_ = new User();
+            user_.setId(-1L);
+            return user_;
+        }
+
+        if (user.get().isBlock()) {
+            System.out.println("Your account is blocked!");
+            User user_ = new User();
+            user_.setId(-1L);
+            return user_;
         }
 
         // Успешная авторизация
         System.out.println("Login successful! Welcome, " + user.get().getName());
-        return user.get().getId();
+        return user.get();
     }
 }

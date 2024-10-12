@@ -6,14 +6,14 @@ import java.util.Scanner;
 
 public class ConsoleLoginInputAdapter {
     private final EditUserUseCase editUserUseCase;
-    GetHabitsUseCase getHabitsUseCase;
-    CreateHabitUseCase createHabitUseCase;
-    UpdateHabitUseCase updateHabitUseCase;
-    DeleteHabitUseCase deleteHabitUseCase;
-    CreateProgressUseCase createProgressUseCase;
-    GenerateProgressStatisticsUseCase generateProgressStatisticsUseCase;
-    ProgressReportUseCase progressReportUseCase;
-    StreakCalculationUseCase streakCalculationUseCase;
+    private final GetHabitsUseCase getHabitsUseCase;
+    private final CreateHabitUseCase createHabitUseCase;
+    private final UpdateHabitUseCase updateHabitUseCase;
+    private final DeleteHabitUseCase deleteHabitUseCase;
+    private final CreateProgressUseCase createProgressUseCase;
+    private final GenerateProgressStatisticsUseCase generateProgressStatisticsUseCase;
+    private final ProgressReportUseCase progressReportUseCase;
+    private final StreakCalculationUseCase streakCalculationUseCase;
 
     ConsoleLoginInputAdapter(EditUserUseCase editUserUseCase,
                              GetHabitsUseCase getHabitsUseCase,

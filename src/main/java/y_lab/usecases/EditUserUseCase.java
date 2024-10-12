@@ -4,6 +4,7 @@ import y_lab.domain.entities.User;
 import y_lab.out.repositories.HabitRepositoryImpl;
 import y_lab.out.repositories.ProgressRepositoryImpl;
 import y_lab.out.repositories.UserRepositoryImpl;
+import y_lab.service.EmailValidatorService;
 import y_lab.usecases.utils.HashFunction;
 
 import java.util.NoSuchElementException;
@@ -31,6 +32,11 @@ public class EditUserUseCase {
         // Проверка уникальности нового email
         if (newEmail != null && !newEmail.isEmpty() && userRepository.findByEmail(newEmail).isPresent()) {
             System.out.println("Email already in use by another account!");
+            return;
+        }
+
+        if (!EmailValidatorService.isValid(newEmail)){
+            System.out.println("Email is incorrect!");
             return;
         }
 

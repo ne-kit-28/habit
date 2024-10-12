@@ -1,7 +1,6 @@
 package y_lab.out.repositories;
 
 import y_lab.domain.entities.Habit;
-import y_lab.domain.entities.User;
 import y_lab.domain.repositories.HabitRepository;
 
 import java.util.ArrayList;
@@ -84,5 +83,15 @@ public class HabitRepositoryImpl implements HabitRepository {
                 habitArrayList.add(entry.getValue());
         }
         return Optional.of(habitArrayList);
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ArrayList<Habit> getAll() {
+        ArrayList<Habit> habitsArray;
+        habitsArray = new ArrayList<>(habits.values());
+        return habitsArray;
     }
 }

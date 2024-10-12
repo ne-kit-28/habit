@@ -4,9 +4,6 @@ import y_lab.domain.entities.Frequency;
 import y_lab.domain.entities.Habit;
 import y_lab.usecases.*;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -160,7 +157,6 @@ public class ConsoleHabitManagementInputAdapter {
                         }
                     }
                 case "3":
-                    System.out.println("log out succeed");
                     return;
                 default:
                     System.out.println("Invalid option. Please try again.");

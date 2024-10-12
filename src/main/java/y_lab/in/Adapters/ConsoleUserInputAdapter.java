@@ -1,5 +1,8 @@
 package y_lab.in.Adapters;
 
+import y_lab.domain.entities.Role;
+import y_lab.domain.entities.User;
+import y_lab.service.ExecutorService;
 import y_lab.usecases.*;
 
 import java.util.Scanner;
@@ -17,13 +20,14 @@ public class ConsoleUserInputAdapter {
     private final RegistrationUseCase registrationUseCase;
     private final StreakCalculationUseCase streakCalculationUseCase;
     private final UpdateHabitUseCase updateHabitUseCase;
+    private final GetUsersUseCase getUsersUseCase;
 
     public ConsoleUserInputAdapter(CreateHabitUseCase createHabitUseCase, CreateProgressUseCase createProgressUseCase
             , DeleteHabitUseCase deleteHabitUseCase, EditUserUseCase editUserUseCase
             , GenerateProgressStatisticsUseCase generateProgressStatisticsUseCase, GetHabitsUseCase getHabitsUseCase
             , LoginUseCase loginUseCase, PasswordResetUseCase passwordResetUseCase
             , ProgressReportUseCase progressReportUseCase, RegistrationUseCase registrationUseCase
-            , StreakCalculationUseCase streakCalculationUseCase, UpdateHabitUseCase updateHabitUseCase) {
+            , StreakCalculationUseCase streakCalculationUseCase, UpdateHabitUseCase updateHabitUseCase, GetUsersUseCase getUsersUseCase) {
         this.createHabitUseCase = createHabitUseCase;
         this.createProgressUseCase = createProgressUseCase;
         this.deleteHabitUseCase = deleteHabitUseCase;
@@ -36,12 +40,16 @@ public class ConsoleUserInputAdapter {
         this.registrationUseCase = registrationUseCase;
         this.streakCalculationUseCase = streakCalculationUseCase;
         this.updateHabitUseCase = updateHabitUseCase;
+        this.getUsersUseCase = getUsersUseCase;
     }
 
     public void start(){
+
         Scanner scanner = new Scanner(System.in);
         ConsoleLoginInputAdapter consoleLoginInputAdapter;
+        ConsoleAdministratorInputAdapter consoleAdministratorInputAdapter;
 
+        User user;
         String option;
         String name;
         String email;
@@ -73,8 +81,9 @@ public class ConsoleUserInputAdapter {
                     email = scanner.nextLine();
                     System.out.println("Enter your password:");
                     password = scanner.nextLine();
-                    userId = loginUseCase.login(email, password);
-                    if (userId != -1) {
+                    user = loginUseCase.login(email, password);
+                    userId = user.getId();
+                    if (userId != -1 && user.getRole() == Role.REGULAR) {
                         consoleLoginInputAdapter = new ConsoleLoginInputAdapter(
                                 editUserUseCase
                                 , getHabitsUseCase
@@ -86,6 +95,20 @@ public class ConsoleUserInputAdapter {
                                 , progressReportUseCase
                                 , streakCalculationUseCase);
                         consoleLoginInputAdapter.operations(userId);
+                    } else if (userId != -1 && user.getRole() == Role.ADMINISTRATOR) {
+                        consoleAdministratorInputAdapter = new ConsoleAdministratorInputAdapter(
+                                editUserUseCase
+                                , getUsersUseCase
+                                , getHabitsUseCase
+                                , createHabitUseCase
+                                , updateHabitUseCase
+                                , deleteHabitUseCase
+                                , createProgressUseCase
+                                , generateProgressStatisticsUseCase
+                                , progressReportUseCase
+                                ,streakCalculationUseCase
+                        );
+                        consoleAdministratorInputAdapter.options(userId);
                     }
                     break;
                 case "3":
