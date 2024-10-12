@@ -7,6 +7,7 @@ import y_lab.out.repositories.HabitRepositoryImpl;
 import y_lab.out.repositories.UserRepositoryImpl;
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 /**
  * Use case for creating a new habit.
@@ -48,7 +49,7 @@ public class CreateHabitUseCase {
             return;
         }
         Habit habit = new Habit(name, description, frequency, LocalDate.now());
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
         habit.setUser(user);
         habitRepository.save(habit);
         System.out.println("Habit " + name + " is created!");

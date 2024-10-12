@@ -7,10 +7,7 @@ import y_lab.domain.repositories.ProgressRepository;
 import y_lab.service.DataService;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Implementation of the {@link ProgressRepository} interface, handling
@@ -54,10 +51,16 @@ public class ProgressRepositoryImpl implements ProgressRepository, DataService {
      */
     @Override
     public void deleteAllByHabitId(Long habitId) {
+        List<Long> keysToDelete = new ArrayList<>();
+
         for (Map.Entry<Long, Progress> entry : progresses.entrySet()) {
             if (entry.getValue().getHabit().getId().equals(habitId)) {
-                progresses.remove(entry.getKey());
+                keysToDelete.add(entry.getKey());
             }
+        }
+
+        for (Long key : keysToDelete) {
+            progresses.remove(key);
         }
     }
 
@@ -68,10 +71,16 @@ public class ProgressRepositoryImpl implements ProgressRepository, DataService {
      */
     @Override
     public void deleteAllByUserId(Long userId) {
+        List<Long> keysToDelete = new ArrayList<>();
+
         for (Map.Entry<Long, Progress> entry : progresses.entrySet()) {
             if (entry.getValue().getUser().getId().equals(userId)) {
-                progresses.remove(entry.getKey());
+                keysToDelete.add(entry.getKey());
             }
+        }
+
+        for (Long key : keysToDelete) {
+            progresses.remove(key);
         }
     }
 
@@ -83,7 +92,7 @@ public class ProgressRepositoryImpl implements ProgressRepository, DataService {
      */
     @Override
     public Optional<Progress> findById(Long progressId) {
-        return Optional.of(progresses.get(progressId));
+        return Optional.ofNullable(progresses.get(progressId));
     }
 
     /**

@@ -96,7 +96,7 @@ public class UserRepositoryImpl implements UserRepository, DataService {
      */
     @Override
     public Optional<User> findById(Long id) {
-        return Optional.of(users.get(id));
+        return Optional.ofNullable(users.get(id));
     }
 
     /**
