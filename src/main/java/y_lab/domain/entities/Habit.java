@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Habit {
+public class Habit implements Serializable {
     private Long id;
     private User user;
     private String name;

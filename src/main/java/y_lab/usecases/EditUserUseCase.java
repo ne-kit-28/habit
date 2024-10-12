@@ -35,7 +35,7 @@ public class EditUserUseCase {
             return;
         }
 
-        if (!EmailValidatorService.isValid(newEmail)){
+        if (newEmail != null && !newEmail.isEmpty() && !EmailValidatorService.isValid(newEmail)){
             System.out.println("Email is incorrect!");
             return;
         }

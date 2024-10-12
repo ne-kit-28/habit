@@ -118,6 +118,7 @@ public class ConsoleUserInputAdapter {
                     break;
                 case "4":
                     System.out.println("Exiting the program...");
+
                     return;
                 default:
                     System.out.println("Invalid option. Please try again.");

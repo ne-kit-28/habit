@@ -1,17 +1,27 @@
 package y_lab.out.repositories;
 
+import lombok.Getter;
+import lombok.Setter;
 import y_lab.domain.entities.Habit;
 import y_lab.domain.entities.Progress;
+import y_lab.domain.entities.User;
 import y_lab.domain.repositories.ProgressRepository;
+import y_lab.service.DataService;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-public class ProgressRepositoryImpl implements ProgressRepository {
+@Getter
+@Setter
+public class ProgressRepositoryImpl implements ProgressRepository, DataService {
     HashMap<Long, Progress> progresses = new HashMap<>();
     Long idGenerated = 0L;
+
+    public ProgressRepositoryImpl(String fileName) {
+        this.loadFromFile(fileName);
+    }
 
     /**
      * @param progress
@@ -66,5 +76,26 @@ public class ProgressRepositoryImpl implements ProgressRepository {
                 arrayList.add(entry.getValue());
         }
         return arrayList;
+    }
+
+    @Override
+    public void saveToFile(String fileName) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            out.writeObject(this.getProgresses());
+            out.writeObject(this.getIdGenerated());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void loadFromFile(String fileName) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            this.setProgresses((HashMap<Long, Progress>) in.readObject());
+            this.setIdGenerated((Long) in.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

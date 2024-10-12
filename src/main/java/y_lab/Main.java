@@ -13,9 +13,9 @@ public class Main {
     public static void main(String[] args) {
 
 
-        UserRepositoryImpl userRepository = new UserRepositoryImpl();
-        HabitRepositoryImpl habitRepository = new HabitRepositoryImpl();
-        ProgressRepositoryImpl progressRepository = new ProgressRepositoryImpl();
+        UserRepositoryImpl userRepository = new UserRepositoryImpl("Users.ser", "Admins.ser");
+        HabitRepositoryImpl habitRepository = new HabitRepositoryImpl("Habits.ser");
+        ProgressRepositoryImpl progressRepository = new ProgressRepositoryImpl("Progress.ser");
 
         ExecutorService executorService = new ExecutorService(habitRepository, new NotificationService());
 
@@ -50,8 +50,11 @@ public class Main {
         );
 
         executorService.startScheduler();
-        inputAdapter.start(); //TODO сохранение в файл и востановление
+        inputAdapter.start();
+        userRepository.saveToFile("Users.ser");
+        //userRepository.saveAdmins("Admins.ser");
+        habitRepository.saveToFile("Habits.ser");
+        progressRepository.saveToFile("Progress.ser");
         executorService.stopScheduler();
-
     }
 }

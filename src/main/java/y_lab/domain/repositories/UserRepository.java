@@ -14,4 +14,6 @@ public interface UserRepository {
     ArrayList<User> getAll();
     void deleteById(Long id);
     void update(Long id, User user);
+    void loadAdminsFromFile(String adminsFile);
+    void saveAdmins(String adminsFile);
 }

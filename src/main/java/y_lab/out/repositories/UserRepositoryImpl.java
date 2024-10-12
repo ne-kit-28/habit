@@ -1,15 +1,27 @@
 package y_lab.out.repositories;
 
+import lombok.Getter;
+import lombok.Setter;
 import y_lab.domain.entities.User;
 import y_lab.domain.repositories.UserRepository;
+import y_lab.service.DataService;
 
+import java.io.*;
 import java.util.*;
 
-public class UserRepositoryImpl implements UserRepository {
+@Getter
+@Setter
+public class UserRepositoryImpl implements UserRepository, DataService {
     HashMap<Long, User> users = new HashMap<>();
     ArrayList<String> adminEmails = new ArrayList<>();
-
     Long idGenerated = 0L;
+
+    public UserRepositoryImpl(String fileName, String admins) {
+        this.loadFromFile(fileName);
+        this.loadAdminsFromFile(admins);
+        //adminEmails.add("admin@ya.ru");
+        //adminEmails.add("admin2@ya.ru");
+    }
 
     /**
      * @param email
@@ -30,7 +42,6 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public boolean isAdminEmail(String email) {
-        adminEmails.add("nik");
         return adminEmails.contains(email);
     }
 
@@ -89,5 +100,50 @@ public class UserRepositoryImpl implements UserRepository {
     public void update(Long id, User user) {
         if (users.containsKey(id))
             users.replace(id, user);
+    }
+
+    /**
+     * @param adminsFile
+     */
+    @Override
+    public void loadAdminsFromFile(String adminsFile) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(adminsFile))) {
+            this.setAdminEmails((ArrayList<String>) in.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param adminsFile
+     */
+    @Override
+    public void saveAdmins(String adminsFile) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(adminsFile))) {
+            out.writeObject(this.getAdminEmails());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void saveToFile(String fileName) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            out.writeObject(this.getUsers());
+            out.writeObject(this.getIdGenerated());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void loadFromFile(String fileName) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            this.setUsers((HashMap<Long, User>) in.readObject());
+            this.setIdGenerated((Long) in.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
